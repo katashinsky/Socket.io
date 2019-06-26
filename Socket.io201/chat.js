@@ -8,6 +8,7 @@ const expresServer = app.listen(8000);
 
 const io = socketio(expresServer);
 
+
 io.on('connection', (socket) => {
     socket.emit('messageFromServer', { data: "Data from server" })
 
@@ -18,5 +19,12 @@ io.on('connection', (socket) => {
     socket.on('newMessageToServer', (msg) => {
         console.log(msg)
         io.emit('messageForClients', { text: msg.data })
+        io.of('/admin').emit('messageForClients', { text: msg.data })
     })
+
+})
+
+io.of('/admin').on('connection', (socket) => {
+    console.log('/admin socket connection')
+    io.of('/admin').emit('Welcome', { text: 'Welcome All from admin ???????' })
 })

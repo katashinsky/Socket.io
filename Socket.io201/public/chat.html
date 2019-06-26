@@ -41,33 +41,4 @@
 
     </ul>
 </div>
-<script>
-
-    const socket = io('http://localhost:8000')
-
-
-    socket.on('connect', () => {
-        console.log(socket.id)
-    })
-
-    socket.on('messageFromServer', (data) => {
-        console.log(data)
-        socket.emit("messageToServer", { data: "Data from the client" });
-    })
-
-    document.querySelector('#message-form').addEventListener('submit', (event) => {
-        event.preventDefault();
-
-        const newMessage = document.querySelector('#user-message').value
-        console.log(newMessage)
-        socket.emit('newMessageToServer', { data: newMessage })
-    })
-
-    socket.on('messageForClients', (data) => {
-        const messagesList = document.querySelector('#messages')
-        messagesList.innerHTML += `<li>${data.text}</li>`
-
-
-    })
-
-</script>
+<script type="text/javascript" src="./script.js"></script>
