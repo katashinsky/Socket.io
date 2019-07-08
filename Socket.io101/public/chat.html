@@ -65,9 +65,7 @@
 
     socket.on('messageForClients', (data) => {
         const messagesList = document.querySelector('#messages')
-        messagesList.innerHTML += `<li>${data.text}</li>`
-
-
+        messagesList.innerHTML += data.text + '<br>' 
     })
 
 </script>

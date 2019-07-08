@@ -5,6 +5,7 @@ const socketio = require('socket.io')
 app.use(express.static(__dirname + '/public'))
 
 const expresServer = app.listen(8000);
+
 const io = socketio(expresServer);
 
 io.of('/').on('connection', (socket) => {
@@ -14,3 +15,12 @@ io.of('/').on('connection', (socket) => {
         console.log(data)
     })
 
+    socket.on('newMessageToServer', (msg) => {
+        io.emit('messageForClients', { text: msg.data })
+    })
+
+})
+
+io.of('/admin').on('connection', (socket) => {
+    socket.emit('messageToAdmin', {data: "Hello admin"})
+})

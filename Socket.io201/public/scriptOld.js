@@ -1,13 +1,19 @@
 
 const socket = io('http://localhost:8000')
 const socket2 = io('http://localhost:8000/admin')
+const socket3 = io('http://localhost:8000/group')
 
-socket2.on('welcome', (dataFromServer) => {
-    console.log(dataFromServer)
+
+socket.on('connect', () => {
+    console.log("first", socket.id)
 })
 
-socket.on('joined', (msg) => {
-    console.log(msg)
+socket2.on('connect', () => {
+    console.log("second", socket2.id)
+})
+
+socket2.on('messageToAdmin', (data) => {
+    console.log(data)
 })
 
 socket.on('messageFromServer', (data) => {
@@ -22,4 +28,8 @@ document.querySelector('#message-form').addEventListener('submit', (event) => {
     socket.emit('newMessageToServer', { data: newMessage })
 })
 
+socket.on('messageForClients', (data) => {
+    const messagesList = document.querySelector('#messages')
+    messagesList.innerHTML += data.text + '<br>'
+})
 
