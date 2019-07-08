@@ -1,20 +1,21 @@
 
 const socket = io('http://localhost:8000')
-const socket2 = io('http://localhost:8000/wiki')
-const socket3 = io('http://localhost:8000/mozilla')
-const socket4 = io('http://localhost:8000/linux')
+let nsSocket = ""
 
-socket2.on('welcome', (dataFromServer) => {
-    console.log(dataFromServer)
-})
+socket.on('nsList', (data) => {
+    let namespacesDiv = document.querySelector('.namespaces');
+    namespacesDiv.innerHTML = ""
+    data.forEach(ns => {
+        namespacesDiv.innerHTML += `<div class="namespace" ns=${ns.endpoint}><img src="${ns.img}"></div>`
+    });
 
-socket.on('joined', (msg) => {
-    console.log(msg)
-})
+    document.querySelectorAll('.namespace').forEach((elem) => {
+        elem.addEventListener('click', (e) => {
+            const nsEndpoint = elem.getAttribute('ns')
+        })
+    })
 
-socket.on('messageFromServer', (data) => {
-    console.log(data)
-    socket.emit("messageToServer", { data: "Data from the client" });
+    joinNs('/wiki')
 })
 
 

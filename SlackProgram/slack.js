@@ -11,18 +11,26 @@ const expresServer = app.listen(8000);
 const io = socketio(expresServer);
 
 io.of('/').on('connection', (socket) => {
-    socket.emit('messageFromServer', { data: "Data from server" })
-
-    socket.on('messageToServer', (data) => {
-        console.log(data)
+    let nsData = namespaces.map((ns) => {
+        return {
+            img: ns.image,
+            endpoint: ns.endpoint
+        }
     })
 
-    socket.join('level1')
-    socket.to("level1").emit('joined', `${socket.id} says I have joined in this level1 room`)
+    socket.emit('nsList', nsData)
 })
 
 namespaces.forEach((namespace) => {
-    io.of(namespace.endpoint).on('connection', (socket) => {
-        console.log(`${socket.id} has joined ${namespace.endpoint}`)
+    io.of(namespace.endpoint).on('connection', (nsSocket) => {
+        // console.log(`${nsSocket.id} has joined ${namespace.endpoint}`)
+        nsSocket.emit('nsRoomLoad', namespaces[0].rooms)
+        
+        nsSocket.on('joinRoom', (roomToJoin, numberOfUsersCallBack) => {
+            nsSocket.join(roomToJoin)
+            io.of('/wiki').in(roomToJoin).clients((error, clients) => {
+                numberOfUsersCallBack(clients.length)
+            })
+        })
     })
 })
